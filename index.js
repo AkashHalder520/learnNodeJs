@@ -41,7 +41,20 @@ app.get('/search', (req, res) => {
 });
 
 // ! to use EJS template engine 
+//first we net to set the view engine 
+// app.set('name', 'value');
+app.set('view engine', 'ejs');// we have to define view engine and file type
+
 app.get('/ejsexample', (req, res) => {
-  render
+  res.render('user')
 });
-app.set('name', 'value');
+
+//!to download a file 
+app.get('/documents',(req,res)=>{
+  res.download('./downloadable_Files/Veppy_Documentation.docx','VeppyDocuments.docx')// pathname 2nd parameter downloaded path name
+})
+
+//! sendfile will open the file in new tab not force to download as previous one
+app.get('/openFile',(req,res)=>{
+  res.sendFile(__dirname+'/downloadable_Files/Veppy_Documentation.docx');
+})
