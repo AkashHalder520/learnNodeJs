@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>User page</h1>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, hic repudiandae sint non pariatur tenetur sed atque exercitationem ipsa ducimus suscipit ex ea dolorum at eos fugit natus beatae magnam.</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <%= typeof title !== 'undefined' && title ? title : 'Default Title' %>
+    </title>
+  </head>
+  <body>
+    <% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else { %>
+    <h1>default</h1>
+    <% } %>
+    <!-- // for loop in  ejs -->
+    <% let items=['apple','banana','other foods'] %>
+    <ul>
+      <% items.map((list)=>{%>
+      <li><%= list _%></li>
+      <%}) %>
+    </ul>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, hic
+      repudiandae sint non pariatur tenetur sed atque exercitationem ipsa
+      ducimus suscipit ex ea dolorum at eos fugit natus beatae magnam.
+    </p>
+  </body>
 </html>
