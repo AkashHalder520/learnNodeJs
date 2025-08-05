@@ -79,8 +79,14 @@
         <option value="other">Other</option>
       </select>
 
-      <button type="submit" onclick="">Register</button>
+      <button type="submit" >Register</button>
     </form>
+    
+<% if (name && email) { %>
+  <h2>Submitted Info:</h2>
+  <p>Name: <%= name %></p>
+  <p>Email: <%= email %></p>
+<% } %>
   </div>
 
 </body>

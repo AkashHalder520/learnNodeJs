@@ -2,7 +2,7 @@ console.log("hello");
 
 const express = require('express');
 const app = express()
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));// for accepting form data
 
 // Start the server .listen starts the server
 app.listen(4000, () => {
@@ -80,7 +80,7 @@ app.get('/arrayobj', (req, res) => {
 });
 //!to save form 
 app.get('/form', (req, res) => {
-  res.render('form');
+  res.render('form',{name:'',email:''});
 });
 //! to get the submitted value from ejs
 app.post('/submit', (req, res) => {
@@ -91,9 +91,10 @@ app.post('/submit', (req, res) => {
   console.log("Email:", email);
   console.log("Password:", password);
   console.log("Gender:", gender);
-
+res.render('form',{name:name,email:email})
   // Send response or render another page
-  res.send(`Thanks ${name}, your form has been submitted!`);
+  // res.send(`Thanks ${name}, your form has been submitted!`);
+  //to show on the same page
 });
 //!to download a file 
 app.get('/documents',(req,res)=>{
