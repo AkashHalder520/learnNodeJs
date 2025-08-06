@@ -3,7 +3,8 @@ console.log("hello");
 const express = require('express');
 const app = express()
 app.use(express.urlencoded({ extended: true }));// for accepting form data
-
+//!to use static file like css file 
+app.use(express.static('public'))
 // Start the server .listen starts the server
 app.listen(4000, () => {
   console.log('Server is running on http://localhost:4000');
