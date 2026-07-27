@@ -37,7 +37,7 @@ console.log(process.argv);
 // we can use this as flag like crash flag or fail flag to simulate a crash or failure in the application for testing purposes
 
 const shouldCrash = process.argv.includes("--crash") || false;
-const shouldFail = process.argv.includes("-fail") || false;
+const shouldFail = process.argv.includes("--fail") || false;
 
 process.on("exit", (code) => {
   console.log(`Process exited with code: ${code}`);
