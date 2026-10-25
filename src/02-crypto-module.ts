@@ -13,7 +13,6 @@ import crypto from "crypto";
  * You don't need to install it with npm.
  */
 
-
 /* =========================================================
    1. crypto.randomUUID()
    ========================================================= */
@@ -42,7 +41,6 @@ import crypto from "crypto";
 const randomUUID = crypto.randomUUID();
 
 console.log(`Random UUID: ${randomUUID}`);
-
 
 /* =========================================================
    2. crypto.randomBytes()
@@ -88,7 +86,6 @@ const resetToken = crypto.randomBytes(32).toString("hex");
 
 console.log(`Password Reset Token: ${resetToken}`);
 
-
 /* =========================================================
    3. crypto.createHash()
    ========================================================= */
@@ -122,7 +119,6 @@ console.log(`Password Reset Token: ${resetToken}`);
  * 4. SHA-256 always produces 256 bits of output
  */
 
-
 /*
  * Example: hashing some data
  */
@@ -135,7 +131,6 @@ const data = "Hello, world!";
  */
 
 const hash = crypto.createHash("sha256");
-
 
 /*
  * Step 2:
@@ -153,7 +148,6 @@ const hash = crypto.createHash("sha256");
 
 hash.update(data);
 
-
 /*
  * Step 3:
  * Generate the final hash.
@@ -165,7 +159,6 @@ hash.update(data);
 const result = hash.digest("hex");
 
 console.log(`SHA-256 Hash of "${data}": ${result}`);
-
 
 /* =========================================================
    IMPORTANT: HASHING ≠ ENCRYPTION
@@ -186,7 +179,6 @@ console.log(`SHA-256 Hash of "${data}": ${result}`);
  *
  * Therefore, don't think of SHA-256 as "encrypting" data.
  */
-
 
 /* =========================================================
    IMPORTANT: DON'T USE SHA-256 DIRECTLY FOR PASSWORDS
@@ -223,7 +215,6 @@ console.log(`SHA-256 Hash of "${data}": ${result}`);
  * When the user logs in, the password is hashed again
  * and compared with the stored result.
  */
-
 
 /* =========================================================
    EASY WAY TO REMEMBER
@@ -263,8 +254,139 @@ Example:
 
 So:
 
-UUID       → Unique identifier
+UUID        → Unique identifier
 randomBytes → Secret random value
-Hash       → Fingerprint of data
+Hash        → Fingerprint of data
+HMAC        → Authenticated fingerprint (data + secret key)
 
 */
+
+/* =========================================================
+   4. crypto.createHmac()
+   ========================================================= */
+
+/*
+ * HMAC stands for:
+ * Hash-based Message Authentication Code
+ *
+ * An HMAC is like a hash, but combined with a SECRET KEY.
+ *
+ * Difference:
+ *
+ * Regular Hash:
+ *     data  →  hash
+ *     (Anyone who has the data can compute the exact same hash)
+ *
+ * HMAC:
+ *     data + secret key  →  HMAC signature
+ *     (Only someone who knows the secret key can compute
+ *      or verify this signature)
+ *
+ * Why is HMAC used?
+ * 1. Data Integrity: Proves the data has NOT been modified or tampered with.
+ * 2. Authenticity: Proves the message actually came from someone who holds the secret key.
+ *
+ * Common real-world examples:
+ * - Webhook signatures (e.g., Stripe, GitHub, Razorpay, Shopify)
+ * - API request signing (e.g., AWS Signature v4)
+ * - JWT (JSON Web Tokens) with HMAC-SHA256 (HS256)
+ * - Tamper-proof URLs and signed cookies
+ */
+
+/* ---------------------------------------------------------
+   Example A: Generating an HMAC signature
+   --------------------------------------------------------- */
+
+const secretKey = "super-secret-api-key";
+const payload = JSON.stringify({
+  orderId: "ord_99812",
+  amount: 49.99,
+  currency: "USD",
+  status: "paid",
+});
+
+// Step 1: Create an HMAC instance using an algorithm and your secret key
+const hmac = crypto.createHmac("sha256", secretKey);
+
+// Step 2: Feed the payload into the HMAC
+hmac.update(payload);
+
+// Step 3: Get the resulting signature as a hexadecimal string
+const signature = hmac.digest("hex");
+
+console.log("HMAC Signature:", signature);
+
+/* ---------------------------------------------------------
+   Example B: Real-world Webhook Verification
+   --------------------------------------------------------- */
+
+/*
+ * Imagine your server receives an incoming webhook from a payment
+ * provider (like Stripe or GitHub).
+ *
+ * The provider sends:
+ * 1. The raw payload in the request body
+ * 2. A signature in the request headers (e.g. 'x-signature')
+ *
+ * To verify the webhook is legitimate and untampered:
+ * You recompute the HMAC using your shared secret and compare it.
+ *
+ * NOTE: Always use `crypto.timingSafeEqual()` instead of `===`
+ * when comparing signatures to prevent timing attacks!
+ */
+
+function verifyWebhookSignature(
+  rawBody: string,
+  receivedSignature: string,
+  secret: string,
+): boolean {
+  // Compute expected signature
+  const expectedSignature = crypto
+    .createHmac("sha256", secret)
+    .update(rawBody)
+    .digest("hex");
+
+  // Convert hex strings to raw byte Buffers:
+  // 1. `crypto.timingSafeEqual()` only accepts Buffers/TypedArrays, not plain strings.
+  // 2. Comparing with regular `===` exits early on the first wrong character,
+  //    leaking timing clues that attackers can exploit (timing attack).
+  const expectedBuffer = Buffer.from(expectedSignature, "utf8");
+  const receivedBuffer = Buffer.from(receivedSignature, "utf8");
+
+  // `timingSafeEqual` throws a RangeError if byte lengths differ,
+  // so check lengths first.
+  if (expectedBuffer.length !== receivedBuffer.length) {
+    return false;
+  }
+
+  // Compare in constant time (checks every byte, no early exit)
+  return crypto.timingSafeEqual(expectedBuffer, receivedBuffer);
+}
+
+// Test webhook verification:
+const incomingPayload = payload;
+const incomingSignatureHeader = signature;
+
+const isValid = verifyWebhookSignature(
+  incomingPayload,
+  incomingSignatureHeader,
+  secretKey,
+);
+
+console.log("Is Webhook Signature Valid?", isValid); // true
+
+// Test with tampered payload:
+const tamperedPayload = JSON.stringify({
+  orderId: "ord_99812",
+  amount: 0.99, // tampered amount!
+  currency: "USD",
+  status: "paid",
+});
+
+const isTamperedValid = verifyWebhookSignature(
+  tamperedPayload,
+  incomingSignatureHeader,
+  secretKey,
+);
+
+console.log("Is Tampered Payload Valid?", isTamperedValid); // false
