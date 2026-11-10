@@ -12,6 +12,22 @@ When working here:
 - **Explain the "why", not just the "what".** Say why a thing exists and what goes wrong without it.
 - Teach inside the code with comments, using the style of the existing files (see below).
 
+## How to explain things to the user
+
+Whenever the user asks for an explanation or an example:
+- Assume they are a **complete beginner**. Never assume they already know a concept, even a basic one.
+- Use very simple language. Avoid jargon. If a technical term is needed, explain it right away with a small everyday example.
+- Go **step by step**, in small pieces, and prefer a short practical example over a long theory.
+- Say what a thing is, why it exists, and what goes wrong without it.
+
+## Keeping README.md up to date
+
+`README.md` is the long-term guide to this project. It must always match the real code.
+- When a module/lesson or significant feature is added, changed, or pushed, update `README.md` in the same piece of work: table of contents, project structure, a lesson section (what it does, why it exists, how it works, how it connects to the other lessons), and the `npm run NN` command.
+- Document only what actually exists in the code. Mark unfinished work as unfinished (for example `05-timer-module.ts` is still a stub).
+- When a problem in the README's "Known problems" section is fixed, remove it from that list.
+- Write the README in the same simple, beginner-friendly style described above.
+
 ## Commands
 
 ```bash
@@ -38,4 +54,5 @@ npm run build  # tsc, compiles src/ to dist/
 
 - `package.json` has `"type": "module"` (ES modules). So `__dirname` and `__filename` do **not** exist; use `import.meta.dirname` / `import.meta.filename`. `require()` is also unavailable; use `import`.
 - `tsconfig.json` uses `module: NodeNext`, `strict: true`, `rootDir: ./src`, and lists `"jest"` in `types` even though jest is not installed, so `npm run build` may fail on that until it's removed or jest is added.
+- `src/05-timer-module.ts` is only a one-line stub and has no `npm run 05` script yet.
 - `concept.md` holds the user's own learning notes; don't rewrite it unless asked.
