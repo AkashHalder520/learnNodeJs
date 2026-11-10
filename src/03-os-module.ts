@@ -9,3 +9,4 @@ console.log('Free Memory:', os.freemem());
 console.log('Operating System:', os.type());
 console.log('Platform:', os.platform());
 console.log('Uptime (seconds):', os.uptime());  
+console.log('home directory', os.homedir);
