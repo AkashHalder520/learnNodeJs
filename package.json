@@ -13,6 +13,7 @@
     "02": "tsx src/02-crypto-module.ts",
     "03": "tsx src/03-os-module.ts",
     "04": "tsx src/04-path-module.ts",
+    "05": "tsx src/05-timer-module.ts",
     "dev": "tsx watch src/index.ts"
   },
   "devDependencies": {
