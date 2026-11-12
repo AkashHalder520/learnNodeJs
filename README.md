@@ -16,7 +16,7 @@ If you are reading this years later and have forgotten everything: start at [How
    - [02 - The `crypto` module](#02---the-crypto-module)
    - [03 - The `os` module](#03---the-os-module)
    - [04 - The `path` module](#04---the-path-module)
-   - [05 - The timer module (not written yet)](#05---the-timer-module-not-written-yet)
+   - [05 - The timer module](#05---the-timer-module)
 5. [How the lessons connect](#how-the-lessons-connect)
 6. [Important concepts explained simply](#important-concepts-explained-simply)
 7. [Dependencies](#dependencies)
@@ -56,6 +56,7 @@ npm run 01     # process object
 npm run 02     # crypto module
 npm run 03     # os module
 npm run 04     # path module
+npm run 05     # timer module
 ```
 
 Lesson 01 also accepts extra options. Notice the extra `--`; without it, npm swallows the options itself:
@@ -89,7 +90,7 @@ learnNodeJs/
 │   ├── 02-crypto-module.ts    <- lesson 2
 │   ├── 03-os-module.ts        <- lesson 3
 │   ├── 04-path-module.ts      <- lesson 4
-│   ├── 05-timer-module.ts     <- lesson 5 (only a one-line stub for now)
+│   ├── 05-timer-module.ts     <- lesson 5
 │   └── index.ts               <- scratch file for quick experiments
 ├── concept.md                 <- your own notes (do not rewrite)
 ├── CLAUDE.md                  <- rules for the Claude Code assistant
@@ -220,11 +221,22 @@ path.extname("photo.png");         // ".png"
 
 **Connection to other lessons:** it uses `process.cwd()` from lesson 01. The path knowledge is needed for the upcoming file system lesson.
 
-### 05 - The timer module (not written yet)
+### 05 - The timer module
 
-**File:** `src/05-timer-module.ts`
+**File:** `src/05-timer-module.ts` | **Run:** `npm run 05`
 
-This file currently holds a single unfinished comment line. There is no lesson content and no `npm run 05` script yet. When the lesson is written, this section will be replaced with a real explanation (see [maintenance rules](#how-this-readme-is-maintained)).
+**What it is:** timers let you run a function *later* instead of right now. They are global, so there is nothing to import.
+
+**Why it exists:** Node runs your code line by line. If you want "do this after 2 seconds", you must not freeze the whole program while waiting. A timer says "remember this job, keep running the rest of my code, come back later".
+
+**What the file shows, in order:**
+1. `setTimeout` runs a function once after a delay. The next line does not wait.
+2. `setInterval` repeats a function. `clearInterval` stops it (the demo counts to 3 and stops, otherwise the program never ends).
+3. `clearTimeout` cancels a timer before it runs.
+4. `setImmediate` runs a function right after the current work.
+5. The run order: normal lines first, then `process.nextTick`, then timers and `setImmediate`. The order of `setTimeout(0)` versus `setImmediate` is not guaranteed.
+
+**Connection to other lessons:** this is a first look at "later" code, which leads to the event loop lesson (planned).
 
 ### Scratch file: `src/index.ts`
 
@@ -342,7 +354,6 @@ Note: lesson file numbers do **not** match this list, because lessons were added
 Written here so the notes stay honest:
 
 - **`npm run build` may fail.** `tsconfig.json` lists `"jest"` under `types`, but jest is not installed. Fix: remove `"jest"` from that list, or install jest.
-- **Lesson 05 is a stub** and has no `npm run 05` script.
 - **Lessons 02 and 03** do not use the `node:` import prefix like 01 and 04 do.
 - **No tests or linter** are set up.
 

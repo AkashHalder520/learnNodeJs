@@ -24,7 +24,7 @@ Whenever the user asks for an explanation or an example:
 
 `README.md` is the long-term guide to this project. It must always match the real code.
 - When a module/lesson or significant feature is added, changed, or pushed, update `README.md` in the same piece of work: table of contents, project structure, a lesson section (what it does, why it exists, how it works, how it connects to the other lessons), and the `npm run NN` command.
-- Document only what actually exists in the code. Mark unfinished work as unfinished (for example `05-timer-module.ts` is still a stub).
+- Document only what actually exists in the code. Mark unfinished work as unfinished (for example, say clearly when a lesson is only a stub).
 - When a problem in the README's "Known problems" section is fixed, remove it from that list.
 - Write the README in the same simple, beginner-friendly style described above.
 
@@ -35,6 +35,7 @@ npm run 01     # run src/01-process-object.ts
 npm run 02     # run src/02-crypto-module.ts
 npm run 03     # run src/03-os-module.ts
 npm run 04     # run src/04-path-module.ts
+npm run 05     # run src/05-timer-module.ts
 npm run dev    # tsx watch src/index.ts (re-runs on save)
 npm run build  # tsc, compiles src/ to dist/
 ```
@@ -54,5 +55,4 @@ npm run build  # tsc, compiles src/ to dist/
 
 - `package.json` has `"type": "module"` (ES modules). So `__dirname` and `__filename` do **not** exist; use `import.meta.dirname` / `import.meta.filename`. `require()` is also unavailable; use `import`.
 - `tsconfig.json` uses `module: NodeNext`, `strict: true`, `rootDir: ./src`, and lists `"jest"` in `types` even though jest is not installed, so `npm run build` may fail on that until it's removed or jest is added.
-- `src/05-timer-module.ts` is only a one-line stub and has no `npm run 05` script yet.
 - `concept.md` holds the user's own learning notes; don't rewrite it unless asked.
