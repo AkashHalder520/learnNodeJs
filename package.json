@@ -14,6 +14,7 @@
     "03": "tsx src/03-os-module.ts",
     "04": "tsx src/04-path-module.ts",
     "05": "tsx src/05-timer-module.ts",
+    "06": "tsx src/06-callback-promise-asyns-await.ts",
     "dev": "tsx watch src/index.ts"
   },
   "devDependencies": {
