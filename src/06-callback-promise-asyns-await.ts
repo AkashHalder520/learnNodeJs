@@ -25,11 +25,13 @@ function findUserWithCallback(
   });
 }
 
-findUserWithCallback(9, (error, user) => {
+function handelUserResponse( error, user ) {
     if (error) { 
         console.error(error.message);
 
     } else {
         console.log(user,"dsfsdf");
     }       
-})
+}
+
+findUserWithCallback(9, handelUserResponse);
