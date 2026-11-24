@@ -113,19 +113,29 @@ console.log(`Flag --crash present?   : ${shouldCrash}`);
 console.log(`Flag --fail present?    : ${shouldFail}`);
 console.log();
 
-/*
+
+/* ---------------------------------------------------------
+ * IMPORTANT NOTE ON COMMAND-LINE ARGUMENTS:
  * ---------------------------------------------------------
- * IMPORTANT NOTE ON NPM SCRIPTS:
- * ---------------------------------------------------------
- * When running via npm scripts (e.g. `npm run 01`), npm intercepts
- * flags unless you use an extra `--` delimiter!
  *
- * ❌ WRONG:  npm run 01 --fail
- *   (npm consumes `--fail` for itself or passes it incorrectly)
+ * 1. DIRECT EXECUTION (Node.js / tsx):
+ *    No extra `--` delimiter is required.
  *
- * ✔️ CORRECT: npm run 01 -- --fail
- *   (The first `--` tells npm: "Pass everything after this directly to tsx/node")
- */
+ *    ✔️ node src/index.js --fail
+ *    ✔️ npx tsx src/index.ts --fail
+ *
+ * 2. EXECUTION VIA NPM SCRIPTS:
+ *    Use an extra `--` delimiter to forward arguments
+ *    to your script instead of letting npm consume them.
+ *
+ *    ❌ WRONG:   npm run 01 --fail
+ *    ✔️ CORRECT: npm run 01 -- --fail
+ *
+ *    The first `--` tells npm:
+ *    "Pass everything after this directly to the script."
+ *
+ * --------------------------------------------------------- */
+
 
 
 /* =========================================================
