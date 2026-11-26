@@ -17,6 +17,7 @@ If you are reading this years later and have forgotten everything: start at [How
    - [03 - The `os` module](#03---the-os-module)
    - [04 - The `path` module](#04---the-path-module)
    - [05 - The timer module](#05---the-timer-module)
+   - [06 - Callbacks, promises, async/await](#06---callbacks-promises-asyncawait)
 5. [How the lessons connect](#how-the-lessons-connect)
 6. [Important concepts explained simply](#important-concepts-explained-simply)
 7. [Dependencies](#dependencies)
@@ -57,6 +58,7 @@ npm run 02     # crypto module
 npm run 03     # os module
 npm run 04     # path module
 npm run 05     # timer module
+npm run 06     # callbacks, promises, async/await
 ```
 
 Lesson 01 also accepts extra options. Notice the extra `--`; without it, npm swallows the options itself:
@@ -91,6 +93,7 @@ learnNodeJs/
 │   ├── 03-os-module.ts        <- lesson 3
 │   ├── 04-path-module.ts      <- lesson 4
 │   ├── 05-timer-module.ts     <- lesson 5
+│   ├── 06-callback-promise-asyns-await.ts  <- lesson 6 (file name has a typo: "asyns")
 │   └── index.ts               <- scratch file for quick experiments
 ├── concept.md                 <- your own notes (do not rewrite)
 ├── CLAUDE.md                  <- rules for the Claude Code assistant
@@ -238,6 +241,24 @@ path.extname("photo.png");         // ".png"
 
 **Connection to other lessons:** this is a first look at "later" code, which leads to the event loop lesson (planned).
 
+### 06 - Callbacks, promises, async/await
+
+**File:** `src/06-callback-promise-asyns-await.ts` | **Run:** `npm run 06`
+
+**What it is:** three ways to say "do this slow job, and tell me when it is finished". The file solves the same task (find a user by id in a small list) in all three ways.
+
+**Why it exists:** slow jobs (files, databases, websites) must not freeze the program. Node starts the job and keeps going. You need a way to get the answer later. Callbacks came first, then promises, then async/await, each one easier to read than the one before.
+
+**What the file shows, in order:**
+1. **Callback:** a function you pass into another function. It is called later with `(error, result)`. Shown with `findUserWithCallback` and a named callback `displayUser`. Many callbacks inside each other get hard to read ("callback hell").
+2. **Promise:** a function returns an object that is `pending`, then `fulfilled` (`resolve`) or `rejected` (`reject`). You use `.then` for success and `.catch` for failure.
+3. **async/await:** the same promise, written like normal top-to-bottom code. `await` waits for the promise, and `try/catch` handles errors.
+4. A short summary and the common mistake of forgetting `await`.
+
+**Good to know:** the file only runs the promise and async/await examples (the callback calls are commented out). Both look for ids that do not exist (`9` and `1001`), so both print "User not found" after about 1 second. Change `1001` to `1` to see the success path.
+
+**Connection to other lessons:** it builds on lesson 05 (`setTimeout` fakes the slow job). It covers item 5 of the learning roadmap. The event loop lesson (planned) will explain what Node does while it waits.
+
 ### Scratch file: `src/index.ts`
 
 Contains one `console.log`. Run with `npm run dev`. Use it to try small ideas. It is not a lesson.
@@ -255,6 +276,8 @@ Contains one `console.log`. Run with `npm run dev`. Use it to try small ideas. I
 
 04 path  ---------> file system lesson (planned): needs paths to find files
 05 timers ---------> event loop lesson (planned): timers are the easiest way to see it
+     |
+     +------------> 06 callbacks/promises (setTimeout fakes the slow job)
 ```
 
 Lessons are mostly independent, so you can run any of them alone.
@@ -295,7 +318,7 @@ This project has only devDependencies, because it is just for learning.
 ### Synchronous vs asynchronous
 - **Synchronous**: do the job now, wait until it is finished, then move on.
 - **Asynchronous**: start the job, move on, and get told when it finishes later.
-The `exit` event in lesson 01 can only do synchronous work. Async is covered in the planned event loop and async/await lessons.
+The `exit` event in lesson 01 can only do synchronous work. Lesson 06 shows the three ways to handle async work: callbacks, promises, and async/await.
 
 ---
 
@@ -315,7 +338,7 @@ All three are in `devDependencies` of `package.json`:
 
 ### `package.json`
 - `"type": "module"` turns on ES modules.
-- `"scripts"` are the shortcuts for `npm run ...` (`01` to `04`, `dev`, `build`, `test`).
+- `"scripts"` are the shortcuts for `npm run ...` (`01` to `06`, `dev`, `build`, `test`).
 - `"devDependencies"` is the list above.
 
 ### `tsconfig.json` (TypeScript settings)
@@ -338,14 +361,14 @@ The order you planned in `concept.md`:
 2. path module (done: lesson 04)
 3. file system (`fs`)
 4. event loop
-5. callbacks, promises, async/await
+5. callbacks, promises, async/await (done: lesson 06)
 6. event emitter
 7. buffer
 8. crypto module (done: lesson 02)
 9. error handling
 10. basic streams
 
-Note: lesson file numbers do **not** match this list, because lessons were added in the order they were studied (`os` and `timer` were added too). Follow the file numbers in `src/` for what exists, and `concept.md` for what is planned.
+Note: lesson file numbers do **not** match this list, because lessons were added in the order they were studied (`os`, `timer` and `callbacks` were added too). Follow the file numbers in `src/` for what exists, and `concept.md` for what is planned.
 
 ---
 
@@ -355,6 +378,7 @@ Written here so the notes stay honest:
 
 - **`npm run build` may fail.** `tsconfig.json` lists `"jest"` under `types`, but jest is not installed. Fix: remove `"jest"` from that list, or install jest.
 - **Lessons 02 and 03** do not use the `node:` import prefix like 01 and 04 do.
+- **Lesson 06 file name has a typo:** `asyns` should be `async`. Renaming it also means updating the `06` script in `package.json`.
 - **No tests or linter** are set up.
 
 ---
